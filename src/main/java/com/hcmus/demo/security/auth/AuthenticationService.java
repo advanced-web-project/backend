@@ -4,12 +4,9 @@ import com.hcmus.demo.model.User;
 import com.hcmus.demo.security.CustomUserDetail;
 import com.hcmus.demo.security.httpclient.OutboundIdentityClient;
 import com.hcmus.demo.security.httpclient.OutboundUserClient;
-import com.hcmus.demo.user.UserRequestDTO;
 import com.hcmus.demo.user.UserService;
 import lombok.RequiredArgsConstructor;
-
 import lombok.experimental.NonFinal;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,7 +19,6 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService {
     private  final OutboundIdentityClient outboundIdentityClient;
     private final OutboundUserClient outboundUserClient;
-    private final ModelMapper modelMapper;
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     @Autowired
@@ -34,7 +30,8 @@ public class AuthenticationService {
     @Value("${outbound.identity.client-secret}")
     protected String CLIENT_SECRET;
     @NonFinal
-    protected String REDIRECT_URI = "http://localhost:3000/authenticate";
+    @Value("${redirect-uri}")
+    protected String REDIRECT_URI;
     @NonFinal
     protected String GRANT_TYPE = "authorization_code";
     public AuthResponse outboundAuthentication(String code) throws Exception {
@@ -50,19 +47,16 @@ public class AuthenticationService {
         {
             return tokenService.generateToken(userService.getUserByEmail(userResponse.getEmail()));
         }
-        UserRequestDTO userDto = UserRequestDTO.builder()
+        User user = User.builder()
                 .email(userResponse.getEmail())
+                .username(userResponse.getName())
                 .password("123456")
-                .username(userResponse.getName()).build();
-        User user = dtoToEntity(userDto);
+                .profile(userResponse.getPicture())
+                .build();
         userService.saveUser(user);
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userResponse.getName(),"123456"));
-
         CustomUserDetail userDetails = (CustomUserDetail) authentication.getPrincipal();
         return tokenService.generateToken(userDetails.getUser());
-    }
-    public User dtoToEntity(UserRequestDTO userDto) {
-        return modelMapper.map(userDto, User.class);
     }
 }
