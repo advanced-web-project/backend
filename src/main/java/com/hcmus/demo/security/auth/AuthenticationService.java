@@ -27,17 +27,20 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     @Autowired
     private final TokenService tokenService;
+
     @NonFinal
     @Value("${outbound.identity.client-id}")
     protected  String CLIENT_ID;
+
     @NonFinal
     @Value("${outbound.identity.client-secret}")
     protected String CLIENT_SECRET;
+
     @NonFinal
     protected String REDIRECT_URI = "http://localhost:3000/authenticate";
     @NonFinal
     protected String GRANT_TYPE = "authorization_code";
-    public AuthResponse outboundAuthentication(String code) throws Exception {
+    public AuthResponse outboundAuthenticgit ation(String code) throws Exception {
         var response = outboundIdentityClient.exchangeToken(ExchangeTokenRequest.builder()
                 .code(code)
                 .clientId(CLIENT_ID)
@@ -52,7 +55,7 @@ public class AuthenticationService {
         }
         UserRequestDTO userDto = UserRequestDTO.builder()
                 .email(userResponse.getEmail())
-                .password("123456")
+                .password("")
                 .username(userResponse.getName()).build();
         User user = dtoToEntity(userDto);
         userService.saveUser(user);
