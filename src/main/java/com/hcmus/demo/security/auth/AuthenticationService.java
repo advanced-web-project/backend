@@ -52,10 +52,7 @@ public class AuthenticationService {
         }
         UserRequestDTO userDto = UserRequestDTO.builder()
                 .email(userResponse.getEmail())
-                .address("VN")
                 .password("123456")
-                .firstName(userResponse.getFamilyName())
-                .lastName(userResponse.getGivenName())
                 .username(userResponse.getName()).build();
         User user = dtoToEntity(userDto);
         userService.saveUser(user);

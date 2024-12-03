@@ -13,7 +13,7 @@ import org.springframework.hateoas.CollectionModel;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRequestDTO extends CollectionModel<UserRequestDTO> {
+public class UserRequestDTO {
 
     @NotNull(message = "Username is required.")
     @NotBlank(message = "Username is not empty.")

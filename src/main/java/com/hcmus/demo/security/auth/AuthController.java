@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
@@ -33,7 +34,7 @@ public class AuthController {
      * @return a ResponseEntity containing the authentication response with the access token
      */
     @PostMapping("/login")
-    public ResponseEntity<?> getAccessToken(@RequestBody @Valid AuthRequest request) {
+    public AuthResponse getAccessToken(@RequestBody @Valid AuthRequest request) {
         String username = request.getUsername();
         String password = request.getPassword();
 
@@ -41,9 +42,8 @@ public class AuthController {
                 new UsernamePasswordAuthenticationToken(username, password));
 
         CustomUserDetail userDetails = (CustomUserDetail) authentication.getPrincipal();
-        AuthResponse response = tokenService.generateToken(userDetails.getUser());
 
-        return ResponseEntity.ok(response);
+        return tokenService.generateToken(userDetails.getUser());
     }
 
     /**
@@ -69,13 +69,12 @@ public class AuthController {
      * @return a ResponseEntity containing the authentication response with the new access token
      */
     @PostMapping("/refresh-token")
-    public ResponseEntity<?> getRefreshToken(@RequestBody @Valid RefreshTokenRequest request) {
+    public AuthResponse getRefreshToken(@RequestBody @Valid RefreshTokenRequest request)  {
         try {
-            AuthResponse authResponse = tokenService.refreshTokens(request);
-            return ResponseEntity.ok(authResponse);
+            return tokenService.refreshTokens(request);
         } catch (Exception e) {
             // Handle exception and return unauthorized status
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            throw new BadCredentialsException("Invalid refresh token");
         }
     }
 

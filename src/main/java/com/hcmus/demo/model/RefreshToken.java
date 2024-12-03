@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 import java.util.Date;
 
@@ -16,6 +17,7 @@ import java.util.Date;
 @Table(name = "refresh_tokens")
 @Data
 @RequiredArgsConstructor
+@ToString
 @AllArgsConstructor
 public class RefreshToken {
     @Id

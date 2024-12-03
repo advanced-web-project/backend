@@ -86,6 +86,9 @@ public class TokenService {
         String username = request.getUsername();
         String rawRefreshToken = request.getRefreshToken();
 
+        System.out.println("Username: " + username);
+        System.out.println("Refresh token: " + rawRefreshToken);
+
         RefreshToken refreshTokenFound = null;
         List<RefreshToken> refreshTokens = refreshTokenRepo.findByUsername(username);
         for (RefreshToken refreshToken : refreshTokens) {
@@ -93,6 +96,9 @@ public class TokenService {
                 refreshTokenFound = refreshToken;
             }
         }
+
+        System.out.println("Refresh token found: " + refreshTokenFound);
+
         if (refreshTokenFound == null) {
             throw new RefreshTokenNotFoundException("Refresh token not found");
         }

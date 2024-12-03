@@ -8,7 +8,7 @@ import org.springframework.hateoas.CollectionModel;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserResponseDTO extends CollectionModel<UserResponseDTO> {
+public class UserResponseDTO {
     private Long id;
     private String username;
     private String email;
