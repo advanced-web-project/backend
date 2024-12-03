@@ -30,18 +30,4 @@ public class UserRequestDTO extends CollectionModel<UserRequestDTO> {
     @NotBlank(message = "Password is not empty.")
     @Size(min = 6, message = "Password must be at least 6 characters.")
     private String password;
-
-    @NotNull(message = "First name is required.")
-    @NotBlank(message = "First name is not empty.")
-    @Size(max = 50, message = "First name must not exceed 50 characters.")
-    private String firstName;
-
-    @NotNull(message = "Last name is required.")
-    @NotBlank(message = "Last name is not empty.")
-    @Size(max = 50, message = "Last name must not exceed 50 characters.")
-    private String lastName;
-
-    @Size(max = 255, message = "Address must not exceed 255 characters.")
-    @NotBlank(message = "Address is not empty.")
-    private String address;
 }

@@ -84,7 +84,6 @@ public class UserService {
      */
     public boolean checkUniqueUsername(String username) {
         User user = userRepository.findByUsername(username);
-        System.out.println(user);
         return user == null;
     }
 
