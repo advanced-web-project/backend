@@ -29,7 +29,8 @@ public class User {
 
     @Column(nullable = false)
     private String password; // Password of the user
-
+    @Column
+    private String profile;
     @Column(nullable = false)
     private Date createdAt; // Date when the user was created
 }

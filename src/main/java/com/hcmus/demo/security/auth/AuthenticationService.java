@@ -22,25 +22,21 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService {
     private  final OutboundIdentityClient outboundIdentityClient;
     private final OutboundUserClient outboundUserClient;
-    private final ModelMapper modelMapper;
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     @Autowired
     private final TokenService tokenService;
-
     @NonFinal
     @Value("${outbound.identity.client-id}")
     protected  String CLIENT_ID;
-
     @NonFinal
     @Value("${outbound.identity.client-secret}")
     protected String CLIENT_SECRET;
-
     @NonFinal
     protected String REDIRECT_URI = "http://localhost:3000/authenticate";
     @NonFinal
     protected String GRANT_TYPE = "authorization_code";
-    public AuthResponse outboundAuthenticgit ation(String code) throws Exception {
+    public AuthResponse outboundAuthentication(String code) throws Exception {
         var response = outboundIdentityClient.exchangeToken(ExchangeTokenRequest.builder()
                 .code(code)
                 .clientId(CLIENT_ID)
@@ -53,19 +49,16 @@ public class AuthenticationService {
         {
             return tokenService.generateToken(userService.getUserByEmail(userResponse.getEmail()));
         }
-        UserRequestDTO userDto = UserRequestDTO.builder()
+        User user = User.builder()
                 .email(userResponse.getEmail())
-                .password("")
-                .username(userResponse.getName()).build();
-        User user = dtoToEntity(userDto);
+                .username(userResponse.getName())
+                .password("123456")
+                .profile(userResponse.getPicture())
+                .build();
         userService.saveUser(user);
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userResponse.getName(),"123456"));
-
         CustomUserDetail userDetails = (CustomUserDetail) authentication.getPrincipal();
         return tokenService.generateToken(userDetails.getUser());
-    }
-    public User dtoToEntity(UserRequestDTO userDto) {
-        return modelMapper.map(userDto, User.class);
     }
 }
