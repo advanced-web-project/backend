@@ -9,10 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * REST controller for handling authentication requests.
@@ -26,6 +23,8 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private  AuthenticationService authenticationService;
 
     /**
      * Authenticates the user and generates an access token.
@@ -45,6 +44,22 @@ public class AuthController {
         AuthResponse response = tokenService.generateToken(userDetails.getUser());
 
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Handles POST requests for Google login authentication.
+     *
+     * @param code the authorization code from Google's OAuth 2.0 flow.
+     * @return a ResponseEntity containing the authentication result (e.g., user info or token).
+     * @throws Exception if authentication fails or communication with Google encounters an issue.
+     *
+     * This method exchanges the provided code for access and ID tokens via the
+     * `authenticationService`, validates the user's identity, and returns the result.
+     */
+    @PostMapping("/outbound/authentication")
+    ResponseEntity<?> outboundAuthenticate(@RequestParam("code") String code) throws Exception {
+        var result = authenticationService.outboundAuthentication(code);
+        return ResponseEntity.ok().body(result);
     }
 
     /**

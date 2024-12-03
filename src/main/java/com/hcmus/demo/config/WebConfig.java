@@ -6,6 +6,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+
 /**
  * Configuration class for setting up CORS (Cross-Origin Resource Sharing) settings.
  * This class defines a bean that configures CORS to allow requests from any origin.
@@ -22,12 +24,12 @@ public class WebConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("*"); // Allow requests from any origin
-        configuration.addAllowedMethod("*"); // Allow all HTTP methods
-        configuration.addAllowedHeader("*"); // Allow all headers
-
+        configuration.setAllowCredentials(true);
+        configuration.addAllowedOrigin("http://localhost:3000");
+        configuration.addAllowedHeader("*");
+        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // Apply this configuration to all paths
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 }
