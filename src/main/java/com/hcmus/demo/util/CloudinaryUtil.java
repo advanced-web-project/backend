@@ -16,9 +16,9 @@ public class CloudinaryUtil {
 
     public CloudinaryUtil() {
         // Automatically configured via CLOUDINARY_URL
-        this.cloudinary = new Cloudinary("cloudinary://713662145664962:7KFSNkdck5kbTcnoD__Jo-yvGdk@dt0ps34k9")  ;
+        this.cloudinary = new Cloudinary(System.getenv("CLOUDINARY_URL"))  ;
     }
-
+    
     private final Logger logger = LoggerFactory.getLogger(CloudinaryUtil.class);
 
     public String uploadImageToCloudinary(String imageUrl) {
