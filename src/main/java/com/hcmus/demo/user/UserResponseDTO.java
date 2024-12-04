@@ -1,16 +1,19 @@
 package com.hcmus.demo.user;
 
 import lombok.*;
-import org.springframework.hateoas.CollectionModel;
 
+/**
+ * Data Transfer Object (DTO) for User responses.
+ * This class is used to transfer user data in responses.
+ */
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserResponseDTO {
-    private Long id;
-    private String username;
-    private String email;
-    private String profile;
+    private Long id; // The unique identifier of the user
+    private String username; // The username of the user
+    private String email; // The email address of the user
+    private String profile; // The profile information of the user
 }
